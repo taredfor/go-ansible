@@ -1,0 +1,42 @@
+---
+- hosts: app
+  become: yes
+  tasks: 
+   - name: create user
+     ansible.builtin.user:
+       name: go-app
+       create_home: no
+       home: /opt/bin
+       shell: /sbin/nologin
+       system: yes
+       state: present
+   - name: Create directory if it does not exist
+     ansible.builtin.file:
+       path: /opt/app
+       state: directory
+       mode: '0755'     
+   - name: Copy file to demo
+     ansible.builtin.copy:
+       src: /opt/app/linux-server.bin
+       dest: /opt/app/linux-server.bin
+       owner: go-app
+       group: go-app
+       mode: '0755'
+   - name: Copy systemd file to demo server 
+     ansible.builtin.copy:
+       src: /etc/systemd/system/go-http.service
+       dest: /etc/systemd/system/go-http.service
+       owner: go-app
+       group: go-app
+       mode: '0755'
+   - name: Make sure a service unit is running
+     ansible.builtin.systemd:
+       state: started
+       name: go-http.service
+   - name: Allow all access to tcp port 80
+     community.general.ufw:
+       rule: allow
+       port: '7777'
+       proto: tcp
+
+   

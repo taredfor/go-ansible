@@ -1,0 +1,12 @@
+---
+- hosts: app
+  become: yes
+  tasks: 
+   - name: create user
+     ansible.builtin.user:
+      name: go-app
+      create_home: no
+      home: /opt/bin
+      shell: /sbin/nologin
+      system: yes
+      state: present

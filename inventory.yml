@@ -1,0 +1,7 @@
+all:
+  children:
+    app:
+      hosts:
+        demo:
+          ansible_host: 10.245.68.26
+          ansible_ssh_user: student
